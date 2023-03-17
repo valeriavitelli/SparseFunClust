@@ -1,3 +1,4 @@
+### MAIN sparseKMA FUNCTION (with the normalized L^2 distance)
 sparseKMA <- function(data, x, K, m.prop = .3, perc=0.03, tol=0.01, iter.max=50, 
                       n.out = 500, vignette=TRUE){
   
