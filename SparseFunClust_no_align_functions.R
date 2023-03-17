@@ -1,6 +1,7 @@
 GetWCSS <- function(x, Cs, ws=NULL){
   # x is the nxp matrix of functions
   # Cs is the cluster assignment (vector length n)
+  # ws is the current w(x)
   # returns the Within Cluster Sum of Squares, for each domain point
   wcss.perfeature <- numeric(ncol(x))
   for(k in unique(Cs)){
@@ -19,7 +20,7 @@ GetOptimalW <- function(b, c_star){
   # returns the optimal w(x)
   b_star <- b
   b_star[which(b <= c_star)] <- 0
-  norm_b_star <- sqrt(sum((b_star)^2))
+  norm_b_star <- sqrt(sum((b_star)^2), na.rm = TRUE)
   w <- (1/norm_b_star)*b_star
   return(w)
 }
