@@ -1,0 +1,37 @@
+#####################
+#### TOY EXAMPLE ####
+#####################
+
+## this script shows a toy example of usage of SparseFunClust (without alignment)
+
+## load source files
+source('SparseFunClust_data_generation.R')
+source('SparseFunClust_no_align_functions.R')
+source('SparseFunClust_no_align.R')
+
+## generate the data
+n <- 100
+x <- seq(0,1,len=1000)
+out <- generate.data.FV17(n, x)
+data <- out$data
+trueClust <- out$true.partition
+
+## run Sparse Functional Clustering (no alignment)
+K <- 2           # run with 2 groups only
+method <- 'kmea' # version with K-means clustering
+m.tuned <- FKMSparseClustering.permute(data, x, K, method=method)$m
+result <- FKMSparseClustering(data, x, K, m.tuned, method)
+
+## plot / explore results
+table(trueClust,result$CLUSTER)
+cer(trueClust,result$CLUSTER)
+
+x11()
+par(mfrow=c(1,2))
+matplot(x,t(data),type='l',lty=1,col=result$CLUSTER+1,ylab='',
+        main='SparseFunClust - clustering results')
+lines(x,colMeans(data[which(result$CLUSTER==1),]),lwd=2)
+lines(x,colMeans(data[which(result$CLUSTER==2),]),lwd=2)
+plot(x,result$W,type='l',lty=1,lwd=2,ylab='',main='SparseFunClust - Estimated Weighting function')
+abline(v=0.5)
+
