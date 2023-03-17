@@ -46,7 +46,7 @@ FKMSparseClustering <- function(data, x, K, m, method=c('kmea','pam','hier'), ma
   out <- list(W = w, CLUSTER = k, OBJ=obj, ITERATION = niter)
   return(out)
 }
-/
+
 FKMSparseClustering.permute <- function(data, x, K, mbound = NULL, method=c('kmea','pam','hier'), nperm = 20, maxiter = 50){
   # data is the matrix representing the functions (dim nxp)
   # K is the number of clusters
