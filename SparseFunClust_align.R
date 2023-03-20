@@ -21,11 +21,11 @@ sparseKMA <- function(data, x, K, m.prop = .3, perc=0.03, tol=0.01, iter.max=50,
   n.obs <- dim(data)[1]
   n.abs <- dim(data)[2]
   if(length(dim(x))==0){
-    if(length(x)!=n.abs)print('Warning: dimension mismatch between data and corresponding domain')
+    #if(length(x)!=n.abs)print('Warning: dimension mismatch between data and corresponding domain')
     x.reg <- matrix(x,n.obs,length(x),byrow=TRUE)
   }
   if(length(dim(x))==2){
-    if(sum(dim(x)!=(dim(data)[1:2])))print('Warning: dimension mismatch between data and corresponding domain')
+    #if(sum(dim(x)!=(dim(data)[1:2])))print('Warning: dimension mismatch between data and corresponding domain')
     x.reg <- x
   }
   index <- rep(1000,n.obs)
@@ -147,11 +147,11 @@ sparseKMArho <- function(data, x, K, m.prop=0.3, perc=0.03, tol=0.01, template.e
   }
   n.dim <- dim(data)[3]
   if(length(dim(x))==0){
-    if(length(x)!=n.abs)print('Warning: dimension mismatch between data and corresponding domain')
+    #if(length(x)!=n.abs)print('Warning: dimension mismatch between data and corresponding domain')
     x.reg <- matrix(x,n.obs,length(x),byrow=TRUE)
   }
   if(length(dim(x))==2){
-    if(sum(dim(x)!=(dim(data)[1:2])))print('Warning: dimension mismatch between data and corresponding domain')
+    #if(sum(dim(x)!=(dim(data)[1:2])))print('Warning: dimension mismatch between data and corresponding domain')
     x.reg <- x
   }
   index <- rep(1000,n.obs)
