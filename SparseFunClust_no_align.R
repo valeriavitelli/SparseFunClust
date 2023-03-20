@@ -57,16 +57,17 @@ FKMSparseClustering.permute <- function(data, x, K, mbound = NULL, method=c('kme
   # method is the chosen clustering method ('kmea','pam','hier')
   # nperm is the number of permutations for the gap statistics (20 default)
   # maxiter is the maximum number of iteration (50 default)
-  mu <- x[length(x)] - x[1]
+  mu <- diff(range(x))
   n <- dim(data)[1]
   p <- dim(data)[2]
-  if(length(mbound)>0){if(mbound > mu){
-    stop("m has to be less than the measure of the domain")
+  if(length(mbound)>0){if(mbound < 0 | mbound >= 1){
+    stop("m has to be positive, and strictly smaller than 1")
   }
   }else{
-    mbound <- .6*mu
+    mbound <- .6
   }
-  qualim <- seq(2*min(diff(x)),mbound,len=.1*length(x))
+  mbound.rescaled <- mu * mbound
+  qualim <- seq(2*min(diff(x)),mbound.rescaled,len=.1*length(x))
   GAP <- numeric(length(qualim))
   iter <- 1
   for(m in qualim){
