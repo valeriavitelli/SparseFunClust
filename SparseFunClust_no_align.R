@@ -5,8 +5,8 @@ FKMSparseClustering <- function(data, x, K, m, method=c('kmea','pam','hier'), ma
   # m is the sparsity parameter (0 < m < \mu(D), where \mu(D) is the domain length)
   # method is the chosen clustering method ('kmea','pam','hier'), no default
   # maxiter is the maximum number of iteration (50 default)
-  mu <- x[length(x)] - x[1]
-  if(m > mu){
+  mu <- diff(range(x))
+  if(m > mu){# this check is now redundant as also done in the global function
     stop("m has to be less than the measure of the domain")
   }
   qualim=c('kmea','pam','hier')
