@@ -102,7 +102,7 @@ sparseKMA <- function(data, x, K, m.prop = .3, perc=0.03, tol=0.01, iter.max=50,
       mytmp2 <- colMeans(matapprox.Y(x.reg[ksel,,drop=FALSE], data[ksel,,drop=FALSE], xout), na.rm = TRUE)
       mytmp[ind.mod] <- mytmp2[ind.mod]
       #mytmp2[which(colSums(!is.na(mytmp)) < 2)] <- NA
-      template <- rbind(template, mytmp2)
+      template <- rbind(template, mytmp)
     }
     
     if(vignette)print(paste('Iteration: ',iter,', mean distance: ',mean(index),sep=''))
