@@ -115,7 +115,7 @@ sparseKMA <- function(data, x, K, m.prop = .3, perc=0.03, tol=0.01, iter.max=50,
 
 ### MAIN sparseKMA FUNCTION (with the \rho(f1^\prime, f2^\prime) similarity of Sangalli et al., 2010)
 sparseKMArho <- function(data, x, K, m.prop=0.3, perc=0.03, tol=0.01, template.est = 'raw',  
-                         n.out=500, n.opt=9, iter.max=50, vignette=TRUE){
+                         n.out=500, iter.max=50, vignette=TRUE){
   
   # data is the matrix representing the functions (n x p)
   # NOTE: data can be an array (n x p x d) in case of multidimensional functions R -> R^d 
@@ -136,7 +136,6 @@ sparseKMArho <- function(data, x, K, m.prop=0.3, perc=0.03, tol=0.01, template.e
   #   ['raw' just computes the vector means across functions]
   #   ['loess' estimates the template via the R loess function]
   # n.out is the number of abscissa points on which w(x) is estimated
-  # n.opt is the dimension of the grid for the warping functions optimization search (default to 9)
   # iter.max is the maximum number of iteration (50 default)
   # vignette is a boolean (should the algorithm progress be reported?)
   
@@ -157,6 +156,7 @@ sparseKMArho <- function(data, x, K, m.prop=0.3, perc=0.03, tol=0.01, template.e
   }
   index <- rep(1000,n.obs)
   index.old <- rep(5000,n.obs)
+  n.opt <- 9 # keep value small for computational reasons
   labels <- sample.int(K,n.obs,replace=TRUE)
   labels.old <- sample.int(K,n.obs,replace=TRUE)
   grid.shift <- seq(-perc,perc,len=n.opt)
