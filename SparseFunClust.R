@@ -134,5 +134,15 @@ SparseFunClust <- function(data, x, K, do.alignment, funct.measure = 'L2', clust
   }
  
   return(out)
+  ## the output is a list, with elements:
+  ## template = matrix (dim=K x n.out) with the final cluster templates
+  ## temp.abscissa = vector (length=n.out) of the abscissa values on which the template is defined
+  ## labels = vector (length=n) of the cluster assignments
+  ## warping = matrix (dim=n x 2) with the intercept (1st column) and slope (2nd column)
+  ##           of the estimated warping function for each of the n curves
+  ## reg.abscissa = matrix (dim=n x n.out) of each of the n curves registered abscissa
+  ## distance = vector (length=n) of each curve's final distance to the assigned cluster template
+  ## w = vector (length=n.out) of the estimated weighting function w(x)
+  ## x.bcss = vector (length=n.out) of the final point-wise between-cluster sum-of-squares
    
 }
