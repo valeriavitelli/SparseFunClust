@@ -56,7 +56,7 @@
 # iter.max = maximum number of iterations of the clustering loop (default 50)
 # vignette = boolean (should the algorithm progress be reported?)
 
-SparseFunClust <- function(data, x, K, do.alignment, funct.measure = 'L2', clust.method = 'kma',
+SparseFunClust <- function(data, x, K, do.alignment, funct.measure = 'L2', clust.method = 'kmea',
                            m.prop=0.3, tuning.m = FALSE, tuning.par = list(mbound = NULL, nperm = 20),
                            perc=0.03, tol=0.01, template.est = 'raw',  
                            n.out=500, iter.max=50, vignette=TRUE){
