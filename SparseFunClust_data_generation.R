@@ -10,7 +10,7 @@ cer <- function(P,Q){
 
 
 
-## DATA GENERATION 1
+## DATA GENERATION 1: NO-MISALIGNMENT CASE
 generate.data.FV17 <- function(n, x, paramC=0.5, plots=FALSE){
   # this function generates a set of simulated functional data in 2 clusters
   # that reproduce the examples in Simulations 2A and 2B in Floriello & Vitelli (2017)
