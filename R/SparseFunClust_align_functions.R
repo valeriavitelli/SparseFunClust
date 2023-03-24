@@ -1,5 +1,3 @@
-source('SparseFunClust_no_align_functions.R')
-
 ## function to use with L2 distance:
 GetWCSSalign <- function(Y, Cs, warp, xreg, Xall){
   # Y    is the nxp matrix of functions

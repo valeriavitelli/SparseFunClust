@@ -27,7 +27,7 @@ GetOptimalW <- function(b, c_star){
 
 GetOptimalClusters <- function(data, K, w, method){
   # data is the nxp matrix of functions
-  # K is the number of clusters 
+  # K is the number of clusters
   # w is the function w(x) - vector of length p
   # method is a string defining the clustering method ('kmea','pam','hier')
   # returns the cluster assignments
@@ -59,6 +59,6 @@ GetTemplates <- function(data, clusters, w){
     mytmp[ind.mod] <- mytmp2[ind.mod]
     template <- rbind(template, mytmp)
   }
-  
-  return(template)  
+
+  return(template)
 }
