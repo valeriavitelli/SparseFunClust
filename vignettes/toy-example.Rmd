@@ -11,32 +11,34 @@ vignette: >
 #### TOY EXAMPLE ####
 #####################
 
-## this script shows a toy example of usage of SparseFunClust (without alignment)
+This script shows a toy example of usage of SparseFunClust (without alignment).
 
-## load source files
-# source('SparseFunClust_data_generation.R')
-# source('SparseFunClust_no_align_functions.R')
-# source('SparseFunClust_no_align.R')
+# Generate the data
 
-## generate the data
-```{r}
+```{r, eval = FALSE}
 n <- 100
 x <- seq(0,1,len=1000)
-out <- generate.data.FV17(n, x)
+out <- SparseFunClust:::generate.data.FV17(n, x)
 data <- out$data
 trueClust <- out$true.partition
+```
+# Run Sparse Functional Clustering (no alignment)
 
-## run Sparse Functional Clustering (no alignment)
+```{r, eval = FALSE}
 K <- 2           # run with 2 groups only
 method <- 'kmea' # version with K-means clustering
-m.tuned <- FKMSparseClustering.permute(data, x, K, method=method)$m
-result <- FKMSparseClustering(data, x, K, m.tuned, method)
+m.tuned <- SparseFunClust:::FKMSparseClustering.permute(data, x, K, method=method)$m
+result <- SparseFunClust:::FKMSparseClustering(data, x, K, m.tuned, method)
+```
 
-## plot / explore results
+# Plot / explore results
+
+```{r, eval = FALSE}
 table(trueClust,result$CLUSTER)
-cer(trueClust,result$CLUSTER)
+SparseFunClust:::cer(trueClust,result$CLUSTER)
+```
 
-x11()
+```{r, eval = FALSE}
 par(mfrow=c(1,2))
 matplot(x,t(data),type='l',lty=1,col=result$CLUSTER+1,ylab='',
         main='SparseFunClust - clustering results')
