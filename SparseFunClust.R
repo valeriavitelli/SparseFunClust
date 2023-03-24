@@ -74,7 +74,7 @@ SparseFunClust <- function(data, x, K, do.alignment, funct.measure = 'L2', clust
     x.reg <- x
   }
   
-  if(!is.integer(K) | length(K)!=1){stop('Error: number of clusters K must be a single integer number')}
+  if(!is.double(K) | length(K)!=1){stop('Error: number of clusters K must be a single integer number')}
   
   if(do.alignment){ # joint sparse clustering WITH alignment
     
