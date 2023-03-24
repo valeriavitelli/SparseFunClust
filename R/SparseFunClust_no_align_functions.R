@@ -20,7 +20,7 @@ GetOptimalW <- function(b, c_star){
   # returns the optimal w(x)
   b_star <- b
   b_star[which(b <= c_star)] <- 0
-  norm_b_star <- sqrt(sum((b_star)^2), na.rm = TRUE)
+  norm_b_star <- sqrt(sum((b_star)^2))
   w <- (1/norm_b_star)*b_star
   return(w)
 }
