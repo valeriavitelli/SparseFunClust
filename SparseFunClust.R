@@ -115,6 +115,7 @@ SparseFunClust <- function(data, x, K, do.alignment, funct.measure = 'L2', clust
       stop('Error: functional H1 measure not supported when alignment is not performed')
     }  
     
+    if(clust.method == 'pam'){require(cluster)}
 
     if(tuning.m){
       out <- FKMSparseClustering.permute(data, x, K, mbound = tuning.par$mbound, nperm = tuning.par$nperm,
@@ -128,7 +129,7 @@ SparseFunClust <- function(data, x, K, do.alignment, funct.measure = 'L2', clust
     # create the same output as for the case with alignment
     final.templates <- GetTemplates(data, clusters = out.no.align$CLUSTER, w = out.no.align$W)
     final.b <- GetWCSS(data, out.no.align$CLUSTER)$bcss.perfeature
-    final.index <- apply((data - final.templates[out.no.align$CLUSTER,]), 1, function(y){L2norm(x,y)})
+    final.index <- apply((data - final.templates[out.no.align$CLUSTER,]), 1, function(y){L2norm(x=x,y)})
     out <- list(template=final.templates, temp.abscissa=x, labels=out.no.align$CLUSTER, 
                 warping=NULL, reg.abscissa=NULL, distance=final.index, w=out.no.align$W, x.bcss=final.b)
   }
