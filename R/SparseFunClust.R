@@ -1,14 +1,14 @@
 ## main function computing Sparse Functional Clustering & Alignment
- 
+
 # data = matrix representing the functions (n x p)
-# NOTES: 
+# NOTES:
 #   [1. assumed to be a vectorized version of the functional data AFTER smoothing]
 #   [2. when using the H1 functional measure, assumed to include the functions FIRST DERIVATIVES]
 #   [3. when using the H1 functional measure, it supports multidimensional functions R -> R^d;
 #       then data can be an array (n x p x d)]
 
 # x = matrix giving the domain of each function (n x p),
-#   or a p-dimensional vector giving the common domain 
+#   or a p-dimensional vector giving the common domain
 
 # K = number of clusters
 
@@ -21,7 +21,7 @@
 
 # clust.method = the clustering method to be used; can be:
 #             'kmea', for k-means clustering 'pam','hier')
-#             'pam', for PAM (see ..) 
+#             'pam', for PAM (see ..)
 #             'hier', for hierarchical clustering clustering
 # [NOTE: 'pam' and 'hier' only supported for the case of NO ALIGNMENT]
 
@@ -35,7 +35,7 @@
 # tuning.par = list of settings for the tuning of the sparsity parameter
 #              list(mbound = NULL, nperm = 20)
 #              mbound = max value of the sparsity parameter to be tested, default 60%
-#              [NOTE: mbound must be lower than 1; the minimal value tested is 0]  
+#              [NOTE: mbound must be lower than 1; the minimal value tested is 0]
 #              nperm = number of permutations to be performed in the tuning, default 20
 #              [NOTE: nperm > 50 is unadvisable for computational reasons]
 
@@ -58,13 +58,13 @@
 
 SparseFunClust <- function(data, x, K, do.alignment, funct.measure = 'L2', clust.method = 'kmea',
                            m.prop=0.3, tuning.m = FALSE, tuning.par = list(mbound = NULL, nperm = 20),
-                           perc=0.03, tol=0.01, template.est = 'raw',  
+                           perc=0.03, tol=0.01, template.est = 'raw',
                            n.out=500, iter.max=50, vignette=TRUE){
-  
+
   # preliminary checks
   n.obs <- dim(data)[1]
   n.abs <- dim(data)[2]
-  
+
   if(length(dim(x))==0){
     if(length(x)!=n.abs)stop('Error: dimension mismatch between data and corresponding domain')
     x.reg <- matrix(x,n.obs,length(x),byrow=TRUE)
@@ -73,48 +73,59 @@ SparseFunClust <- function(data, x, K, do.alignment, funct.measure = 'L2', clust
     if(sum(dim(x)!=(dim(data)[1:2])))stop('Error: dimension mismatch between data and corresponding domain')
     x.reg <- x
   }
+<<<<<<< HEAD:SparseFunClust.R
   
   if(!is.double(K) | length(K)!=1){stop('Error: number of clusters K must be a single integer number')}
   
+=======
+
+  if(!is.double(K) | length(K)!=1){stop('Error: number of clusters K must be a single integer number')}
+
+>>>>>>> 54087ffb848fe7a07012e184f9a363eb92afec85:R/SparseFunClust.R
   if(do.alignment){ # joint sparse clustering WITH alignment
-    
+
     # other initial checks
-    
+
     if(funct.measure == 'L2' & length(dim(data))>2){
       stop('Error: array of data provided; note that multivariate functional data
             are currently  not supported when L2 functional measure is used.')
     }
-    
+
     if(clust.method == 'pam' | clust.method == 'hier'){
       print('WARNING: Only k-means clustering is supported when alignment is performed.')
       print('Functional k-means clustering will be used instead.')
-    } 
-    
+    }
+
     if(tuning.m){
-      print('WARNING: Tuning of the sparsity parameter not supported when alignment is performed. 
+      print('WARNING: Tuning of the sparsity parameter not supported when alignment is performed.
             Default value will be used instead.')
     }
-    
+
     # run sparse functional clustering with alignment
     if(funct.measure == 'L2'){
-      out <- sparseKMA(data, x, K, m.prop = m.prop, perc = perc, tol = tol, iter.max = iter.max, 
+      out <- sparseKMA(data, x, K, m.prop = m.prop, perc = perc, tol = tol, iter.max = iter.max,
                                    n.out = n.out, vignette = vignette)
     }else{
-      out <- sparseKMArho(data, x, K, m.prop = m.prop, perc = perc, tol = tol, template.est = template.est,  
+      out <- sparseKMArho(data, x, K, m.prop = m.prop, perc = perc, tol = tol, template.est = template.est,
                                    n.out = n.out, iter.max = iter.max, vignette = vignette)
     }
-    
+
   }else{ # joint sparse clustering WITHOUT alignment
-    
+
     if(length(dim(data))>2){
-      stop('Error: array of data provided; note that multivariate functional data 
+      stop('Error: array of data provided; note that multivariate functional data
             are currently  not supported when alignment is not performed.')
-    }  
-    
+    }
+
     if(funct.measure == 'H1'){
       stop('Error: functional H1 measure not supported when alignment is not performed')
+<<<<<<< HEAD:SparseFunClust.R
     }  
     
+=======
+    }
+
+>>>>>>> 54087ffb848fe7a07012e184f9a363eb92afec85:R/SparseFunClust.R
     if(clust.method == 'pam'){require(cluster)}
 
     if(tuning.m){
@@ -130,10 +141,14 @@ SparseFunClust <- function(data, x, K, do.alignment, funct.measure = 'L2', clust
     final.templates <- GetTemplates(data, clusters = out.no.align$CLUSTER, w = out.no.align$W)
     final.b <- GetWCSS(data, out.no.align$CLUSTER)$bcss.perfeature
     final.index <- apply((data - final.templates[out.no.align$CLUSTER,]), 1, function(y){L2norm(x=x,y)})
+<<<<<<< HEAD:SparseFunClust.R
     out <- list(template=final.templates, temp.abscissa=x, labels=out.no.align$CLUSTER, 
+=======
+    out <- list(template=final.templates, temp.abscissa=x, labels=out.no.align$CLUSTER,
+>>>>>>> 54087ffb848fe7a07012e184f9a363eb92afec85:R/SparseFunClust.R
                 warping=NULL, reg.abscissa=NULL, distance=final.index, w=out.no.align$W, x.bcss=final.b)
   }
- 
+
   return(out)
   ## the output is a list, with elements:
   ## template = matrix (dim=K x n.out) with the final cluster templates
@@ -145,5 +160,10 @@ SparseFunClust <- function(data, x, K, do.alignment, funct.measure = 'L2', clust
   ## distance = vector (length=n) of each curve's final distance to the assigned cluster template
   ## w = vector (length=n.out) of the estimated weighting function w(x)
   ## x.bcss = vector (length=n.out) of the final point-wise between-cluster sum-of-squares
+<<<<<<< HEAD:SparseFunClust.R
    
 }
+=======
+
+}
+>>>>>>> 54087ffb848fe7a07012e184f9a363eb92afec85:R/SparseFunClust.R
