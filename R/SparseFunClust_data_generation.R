@@ -10,16 +10,16 @@ cer <- function(P,Q){
 
 
 
-## DATA GENERATION 1
+## DATA GENERATION 1: NO-MISALIGNMENT CASE
 generate.data.FV17 <- function(n, x, paramC=0.5, plots=FALSE){
   # this function generates a set of simulated functional data in 2 clusters
   # that reproduce the examples in Simulations 2A and 2B in Floriello & Vitelli (2017)
-
+  
   # n = number of curves
   # x = curves' domain
   # paramC = proportion of cluster overlap (default 0.5, as in Simulation 2A)
   # plots = boolean; should plots be drawn (FALSE default)
-
+  
   # returns a list including:
   # $data = matrix (n x length(x)) with the simulated data
   # $true.partition = vector (length = n) with the true cluster assignments
@@ -30,7 +30,7 @@ generate.data.FV17 <- function(n, x, paramC=0.5, plots=FALSE){
   c <- 2
   sd1 <- .5
   sd2 <- .25
-
+  
   # means
   temp <- a-4*(1-x)*paramC/(1-paramC)
   temp[which(x<=paramC)]<-(a-4*x)[which(x<=paramC)]
@@ -47,7 +47,7 @@ generate.data.FV17 <- function(n, x, paramC=0.5, plots=FALSE){
     c1 <- rnorm(1,mean=c,sd=sd2)
     fx <- cbind(fx,(c1*sin(c1*pi*x)+a1)*(a1-4*x)+b1)
   }
-
+  
   # group 2
   fx2 <- NULL
   for(i in 1:n){
@@ -62,20 +62,20 @@ generate.data.FV17 <- function(n, x, paramC=0.5, plots=FALSE){
   }
   data <- t(cbind(fx,fx2))
   true.partition <- c(rep(1,n),rep(2,n))
-
+  
   # plots
   if(plots){
-
-    dev.new()
+    
+    x11()
     par(mfrow = c(1,2))
     matplot(x,cbind(media1,media2),
             type='l',lty=1,col=2:3,ylab='',main='True cluster means')
-
+    
     matplot(x,t(data),type='l',lty=1,col=true.partition+1, main='Set of synthetic data')
     lines(x,media1,lwd=2)
     lines(x,media2,lwd=2)
-
+    
   }
-
+  
   return(list(data=data, true.partition=true.partition))
 }

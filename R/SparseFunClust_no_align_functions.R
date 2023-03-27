@@ -20,14 +20,14 @@ GetOptimalW <- function(b, c_star){
   # returns the optimal w(x)
   b_star <- b
   b_star[which(b <= c_star)] <- 0
-  norm_b_star <- sqrt(sum((b_star)^2))
+  norm_b_star <- sqrt(sum((b_star)^2, na.rm = TRUE))
   w <- (1/norm_b_star)*b_star
   return(w)
 }
 
 GetOptimalClusters <- function(data, K, w, method){
   # data is the nxp matrix of functions
-  # K is the number of clusters
+  # K is the number of clusters 
   # w is the function w(x) - vector of length p
   # method is a string defining the clustering method ('kmea','pam','hier')
   # returns the cluster assignments
@@ -55,10 +55,15 @@ GetTemplates <- function(data, clusters, w){
   K <- max(unique(clusters))
   for(k in 1:K){
     ksel <- which(clusters==k)
-    mytmp2 <- colMeans(data[ksel,,drop=FALSE], na.rm = TRUE)
+    mytmp2 <- colMeans(data[ksel,,drop=FALSE])
     mytmp[ind.mod] <- mytmp2[ind.mod]
     template <- rbind(template, mytmp)
   }
-
-  return(template)
+  
+  return(template)  
 }
+
+### integral approximation (trapezoid method)
+integral <- function(x,y){sum((y[-1]+y[-length(y)])*diff(x)/2, na.rm=TRUE)}
+### L2 norm
+L2norm <- function(x,y){sqrt(integral(x,y^2))}
