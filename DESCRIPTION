@@ -1,6 +1,6 @@
 Package: SparseFunClust
 Title: Sparse Functional Clustering
-Version: 0.0.0.9001
+Version: 1.0.0
 Authors@R:
     c(
         person(
