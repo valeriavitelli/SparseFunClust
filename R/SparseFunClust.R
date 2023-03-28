@@ -109,13 +109,17 @@ SparseFunClust <- function(data, x, K, do.alignment, funct.measure = 'L2', clust
     }
 
     if(clust.method == 'pam' | clust.method == 'hier'){
-      print('WARNING: Only k-means clustering is supported when alignment is performed.')
-      print('Functional k-means clustering will be used instead.')
+      warning(
+        'Only k-means clustering is supported when alignment is performed.',
+        'Functional k-means clustering will be used instead.'
+      )
     }
 
     if(tuning.m){
-      print('WARNING: Tuning of the sparsity parameter not supported when alignment is performed.
-            Default value will be used instead.')
+      warning(
+        'Tuning of the sparsity parameter not supported when alignment is performed.
+        Default value will be used instead.'
+      )
     }
 
     # run sparse functional clustering with alignment

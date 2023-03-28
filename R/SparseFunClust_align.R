@@ -1,13 +1,13 @@
 ### MAIN sparseKMA FUNCTION (with the normalized L^2 distance)
-sparseKMA <- function(data, x, K, m.prop = .3, perc=0.03, tol=0.01, iter.max=50, 
+sparseKMA <- function(data, x, K, m.prop = .3, perc=0.03, tol=0.01, iter.max=50,
                       n.out = 500, vignette=TRUE){
-  
+
   # data is the matrix representing the functions (n x p)
   #   [I assume to have a vectorized version of the data AFTER smoothing]
   # x is a (n x p) matrix giving the domain of each function,
-  #   or a p-dimensional vector giving the common domain 
+  #   or a p-dimensional vector giving the common domain
   # K is the number of clusters
-  # m.prop is the sparsity parameter (proportion of unrelevant domain 
+  # m.prop is the sparsity parameter (proportion of unrelevant domain
   #               where w(x) = 0) --> (default 30%)
   # perc is the alignment parameter (max proportion of shift / dilation at each iter
   #               of the warping procedure) --> (3% default)
@@ -16,16 +16,14 @@ sparseKMA <- function(data, x, K, m.prop = .3, perc=0.03, tol=0.01, iter.max=50,
   # iter.max is the maximum number of iteration (50 default)
   # n.out is the number of abscissa points on which w(x) is estimated
   # vignette is a boolean (should the algorithm progress be reported?)
-  
+
   # preliminaries
   n.obs <- dim(data)[1]
   n.abs <- dim(data)[2]
   if(length(dim(x))==0){
-    #if(length(x)!=n.abs)print('Warning: dimension mismatch between data and corresponding domain')
     x.reg <- matrix(x,n.obs,length(x),byrow=TRUE)
   }
   if(length(dim(x))==2){
-    #if(sum(dim(x)!=(dim(data)[1:2])))print('Warning: dimension mismatch between data and corresponding domain')
     x.reg <- x
   }
   index <- rep(1000,n.obs)
@@ -40,14 +38,14 @@ sparseKMA <- function(data, x, K, m.prop = .3, perc=0.03, tol=0.01, iter.max=50,
   w.old <- rep(10, length(xout))
   b.old <- b <- rep(1, length(x))
   iter <- 0
-  
+
   # initialize the template
   mytmp <- colMeans(matapprox.Y(x.reg, data, xout), na.rm = TRUE)
   template <- NULL
   for(k in 1:K)template <- rbind(template, mytmp)
-  
+
   while( (mean(abs(index - index.old)) > tol | sum(abs(labels - labels.old)) > 0 ) & iter < iter.max ){
-    
+
     iter <- iter + 1
     index.old <- index
     labels.old <- labels
@@ -59,7 +57,7 @@ sparseKMA <- function(data, x, K, m.prop = .3, perc=0.03, tol=0.01, iter.max=50,
     #this is not necessary for the algorithm:
     #D <- diff(range(xout))
     #m <- D*m.prop
-    
+
     # alignment step
     warp.def <- matrix(NA,n.obs,2)
     for(i in (1:n.obs)){
@@ -78,7 +76,7 @@ sparseKMA <- function(data, x, K, m.prop = .3, perc=0.03, tol=0.01, iter.max=50,
       warp.def[i,] <- t(grid.val[,quale[1]])
       labels[i] <- quale[2]
     }
-    
+
     # within-cluster normalization step
     for(k in 1:K){
       ind <- which(labels == k)
@@ -86,13 +84,13 @@ sparseKMA <- function(data, x, K, m.prop = .3, perc=0.03, tol=0.01, iter.max=50,
       warp.def[ind,2] <- warp.def[ind,2]/colMeans(warp.def[ind,])[2]
     }
     x.reg <- x.reg*warp.def[,2]+warp.def[,1]
-    
+
     # update the weighting function
     b <- GetWCSSalign(matapprox.Y(x.reg, data, xout), labels, warp.def, matapprox.x(x.reg, xout), xout)$bcss.perfeature
     b.ord <- sort(b)
     c.star <- b.ord[ceiling(length(b.ord)*m.prop)]
     w <- GetOptimalW(b, c.star)
-    
+
     # update the templates
     mytmp <- colMeans(matapprox.Y(x.reg, data, xout), na.rm = TRUE)
     ind.mod <- which(w!=0)
@@ -104,28 +102,30 @@ sparseKMA <- function(data, x, K, m.prop = .3, perc=0.03, tol=0.01, iter.max=50,
       #mytmp2[which(colSums(!is.na(mytmp)) < 2)] <- NA
       template <- rbind(template, mytmp)
     }
-    
-    if(vignette)print(paste('Iteration: ',iter,', mean distance: ',mean(index),sep=''))
-    
+
+    if(vignette) {
+      cat('Iteration: ', iter, ', mean distance: ', mean(index), '\n')
+    }
+
   }
-  
+
   return(list(template=template, temp.abscissa=xout, labels=labels, warping=warp.def, reg.abscissa=x.reg, distance=index, w=w, x.bcss=b))
 }
 
 
 ### MAIN sparseKMA FUNCTION (with the \rho(f1^\prime, f2^\prime) similarity of Sangalli et al., 2010)
-sparseKMArho <- function(data, x, K, m.prop=0.3, perc=0.03, tol=0.01, template.est = 'raw',  
+sparseKMArho <- function(data, x, K, m.prop=0.3, perc=0.03, tol=0.01, template.est = 'raw',
                          n.out=500, iter.max=50, vignette=TRUE){
-  
+
   # data is the matrix representing the functions (n x p)
-  # NOTE: data can be an array (n x p x d) in case of multidimensional functions R -> R^d 
+  # NOTE: data can be an array (n x p x d) in case of multidimensional functions R -> R^d
   #   [I assume to have a vectorized version of the data AFTER smoothing]
   #   [here I also assume that these are the functions FIRST DERIVATIVES]
   #   [because the similarity index is ONLY based on derivatives, so no reasons to treat the original functions]
   # x is a (n x p) matrix giving the domain of each function,
-  #   or a p-dimensional vector giving the common domain 
+  #   or a p-dimensional vector giving the common domain
   # K is the number of clusters
-  # m.prop is the sparsity parameter (proportion of unrelevant domain 
+  # m.prop is the sparsity parameter (proportion of unrelevant domain
   #               where w(x) = 0) --> (default 30%)
   # perc is the alignment parameter (max proportion of shift / dilation at each iter
   #               of the warping procedure) --> (3% default)
@@ -138,7 +138,7 @@ sparseKMArho <- function(data, x, K, m.prop=0.3, perc=0.03, tol=0.01, template.e
   # n.out is the number of abscissa points on which w(x) is estimated
   # iter.max is the maximum number of iteration (50 default)
   # vignette is a boolean (should the algorithm progress be reported?)
-  
+
   # preliminaries
   n.obs <- dim(data)[1]
   n.abs <- dim(data)[2]
@@ -147,11 +147,9 @@ sparseKMArho <- function(data, x, K, m.prop=0.3, perc=0.03, tol=0.01, template.e
   }
   n.dim <- dim(data)[3]
   if(length(dim(x))==0){
-    #if(length(x)!=n.abs)print('Warning: dimension mismatch between data and corresponding domain')
     x.reg <- matrix(x,n.obs,length(x),byrow=TRUE)
   }
   if(length(dim(x))==2){
-    #if(sum(dim(x)!=(dim(data)[1:2])))print('Warning: dimension mismatch between data and corresponding domain')
     x.reg <- x
   }
   index <- rep(1000,n.obs)
@@ -168,7 +166,7 @@ sparseKMArho <- function(data, x, K, m.prop=0.3, perc=0.03, tol=0.01, template.e
   b.old <- b <- rep(1, length(x))
   iter <- 0
   if(template.est == 'loess')loess.span <- 0.15
-  
+
   # initialize the template
   template <- array(NA, dim=c(K, n.out, n.dim))
   for(d in 1:n.dim){
@@ -180,9 +178,9 @@ sparseKMArho <- function(data, x, K, m.prop=0.3, perc=0.03, tol=0.01, template.e
     }
     for(k in 1:K)template[k,,d] <- mytmp
   }
-  
+
   while( mean(abs(index - index.old)/index.old) > tol & sum(abs(labels - labels.old)) > 0 & iter < iter.max ){
-    
+
     iter <- iter + 1
     index.old <- index
     labels.old <- labels
@@ -194,7 +192,7 @@ sparseKMArho <- function(data, x, K, m.prop=0.3, perc=0.03, tol=0.01, template.e
     #this is not necessary for the algorithm:
     #D <- diff(range(xout))
     #m <- D*m.prop
-    
+
     # alignment step
     warp.def <- matrix(NA,n.obs,2)
     for(i in (1:n.obs)){# loop over samples
@@ -220,7 +218,7 @@ sparseKMArho <- function(data, x, K, m.prop=0.3, perc=0.03, tol=0.01, template.e
       warp.def[i,] <- t(grid.val[,quale[1]])
       labels[i] <- quale[2]
     }
-    
+
     # normalization step:
     # warping functions must have identity mean within each cluster
     for(k in 1:K){
@@ -229,14 +227,14 @@ sparseKMArho <- function(data, x, K, m.prop=0.3, perc=0.03, tol=0.01, template.e
       warp.def[ind,2] <- warp.def[ind,2]/colMeans(warp.def[ind,,drop=FALSE])[2]
     }
     x.reg <- x.reg*warp.def[,2]+warp.def[,1]
-    
+
     # update the weighting function:
     # w(x) is non-zero on the portion of the domain with maximal within-cluster similarity
     b <- GetWCSSalignRho(matapprox.multiY(x.reg, data, xout), labels, warp.def, matapprox.x(x.reg, xout), xout)$wcss.perfeature
     b.ord <- sort(b)
     c.star <- b.ord[ceiling(length(b.ord)*m.prop)]
     w <- GetOptimalW(b, c.star)
-    
+
     # update the templates
     ind.mod <- which(w!=0)
     template <- array(NA, dim=c(K, n.out, n.dim))
@@ -260,12 +258,12 @@ sparseKMArho <- function(data, x, K, m.prop=0.3, perc=0.03, tol=0.01, template.e
       }
       template[k,,] <- mytmp2
     }
-    
-    if(vignette)print(paste('Iteration: ',iter,', mean distance: ',mean(index),sep=''))
-    
+
+    if(vignette) {
+      cat('Iteration: ', iter, ', mean distance: ', mean(index), '\n')
+    }
   }
-  
-  return(list(template=template, temp.abscissa=xout, labels=labels, warping=warp.def, reg.abscissa=x.reg, 
+
+  return(list(template=template, temp.abscissa=xout, labels=labels, warping=warp.def, reg.abscissa=x.reg,
               distance=index, w=w, x.bcss=b))
 }
-
