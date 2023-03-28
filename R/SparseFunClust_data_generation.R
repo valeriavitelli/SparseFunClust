@@ -90,6 +90,10 @@ generate.data.FV17 <- function(n, x, paramC=0.5, plots=FALSE){
 
   # plots
   if(plots){
+    # Restablish user's par() settings once this function is done
+    oldpar <- par(no.readonly = TRUE)
+    on.exit(par(oldpar))
+
     par(mfrow = c(1,2))
     matplot(x,cbind(media1,media2),
             type='l',lty=1,col=2:3,ylab='',main='True cluster means')
