@@ -1,5 +1,3 @@
-source('./SparseFunClust_no_align_functions.R')
-
 ## function to use with L2 distance:
 GetWCSSalign <- function(Y, Cs, warp, xreg, Xall){
   # Y    is the nxp matrix of functions
@@ -7,9 +5,9 @@ GetWCSSalign <- function(Y, Cs, warp, xreg, Xall){
   # warp is the nx2 matrix of warping functions coefficients (intercept, slope)
   # xreg is the nxp matrix of the registered abscissas
   # Xall is the vector giving the union of the functions' registered abscissas
-  
+
   # returns the Within and Between Cluster Sum of Squares, for each domain point
-  
+
   #manage the domain first
   n <- dim(xreg)[1]
   p <- length(Xall)
@@ -19,7 +17,7 @@ GetWCSSalign <- function(Y, Cs, warp, xreg, Xall){
   bi <- apply(invh.matrix, 1, max, na.rm=TRUE)
   for(i in 1:n)for(j in 1:n)invh.domain[i,j,which(Xall <= min(bi[i], bi[j]) & Xall >= max(ai[i],ai[j]))] <- 1
   invh.Dmeasure <- apply(invh.domain, c(1,2), integral, x=Xall)
-  
+
   # now compute the wcss & bcss
   baseline <- numeric(ncol(Y))
   wcss.perfeature <- numeric(ncol(Y))
@@ -35,7 +33,7 @@ GetWCSSalign <- function(Y, Cs, warp, xreg, Xall){
         tmp <- tmp + (Y[whichers[i],] - Y[whichers[j],])^2*(!is.na(invh.matrix[whichers[i],])*indi*!is.na(invh.matrix[whichers[j],]*indj)/sqrt(invh.Dmeasure[whichers[i],whichers[j]]))
       }}
       wcss.perfeature <- wcss.perfeature + tmp/(length(whichers))
-    } 
+    }
   }
   tot.perfeature <- numeric(ncol(Y))
   for(i in 1:n){for(j in 1:n){
@@ -47,7 +45,7 @@ GetWCSSalign <- function(Y, Cs, warp, xreg, Xall){
   }}
   tot.perfeature <- tot.perfeature/(n)
   bcss.perfeature <- tot.perfeature - wcss.perfeature
-  
+
   # return wcss and bcss
   return(list(wcss.perfeature=wcss.perfeature, wcss=sum(wcss.perfeature), bcss.perfeature=bcss.perfeature))
 }
@@ -59,9 +57,9 @@ GetWCSSalignRho <- function(Y, Cs, warp, xreg, Xall){
   # warp is the nx2 matrix of warping functions coefficients (intercept, slope)
   # xreg is the nxp matrix of the registered abscissas
   # Xall is the vector giving the union of the functions' registered abscissas
-  
+
   # returns the Within Cluster Sum of Squares, for each domain point
-  
+
   #manage the domain first
   n <- dim(xreg)[1]
   p <- length(Xall)
@@ -72,7 +70,7 @@ GetWCSSalignRho <- function(Y, Cs, warp, xreg, Xall){
   bi <- apply(invh.matrix, 1, max, na.rm=TRUE)
   for(i in 1:n)for(j in 1:n)invh.domain[i,j,which(Xall <= min(bi[i], bi[j]) & Xall >= max(ai[i],ai[j]))] <- 1
   invh.Dmeasure <- apply(invh.domain, c(1,2), integral, x=Xall)
-  
+
   # now compute the wcss
   baseline <- numeric(p)
   wcss.perfeature <- NULL
@@ -92,10 +90,10 @@ GetWCSSalignRho <- function(Y, Cs, warp, xreg, Xall){
         dim.tmp <- cbind(dim.tmp, apply(tmp, 1, sum, na.rm = TRUE)/length(whichers))
       }
       wcss.perfeature <- cbind(wcss.perfeature, apply(dim.tmp, 1, mean, na.rm = TRUE))
-    } 
+    }
   }
   wcss.perfeature <- apply(wcss.perfeature, 1, sum, na.rm=TRUE)
-  
+
   # return wcss
   return(list(wcss.perfeature=wcss.perfeature, wcss=sum(wcss.perfeature)))
 }
