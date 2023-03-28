@@ -30,7 +30,7 @@ generate.data.FV17 <- function(n, x, paramC=0.5, plots=FALSE){
   c <- 2
   sd1 <- .5
   sd2 <- .25
-  
+
   # means
   temp <- a-4*(1-x)*paramC/(1-paramC)
   temp[which(x<=paramC)]<-(a-4*x)[which(x<=paramC)]
@@ -47,7 +47,7 @@ generate.data.FV17 <- function(n, x, paramC=0.5, plots=FALSE){
     c1 <- rnorm(1,mean=c,sd=sd2)
     fx <- cbind(fx,(c1*sin(c1*pi*x)+a1)*(a1-4*x)+b1)
   }
-  
+
   # group 2
   fx2 <- NULL
   for(i in 1:n){
@@ -62,20 +62,20 @@ generate.data.FV17 <- function(n, x, paramC=0.5, plots=FALSE){
   }
   data <- t(cbind(fx,fx2))
   true.partition <- c(rep(1,n),rep(2,n))
-  
+
   # plots
   if(plots){
-    
+
     x11()
     par(mfrow = c(1,2))
     matplot(x,cbind(media1,media2),
             type='l',lty=1,col=2:3,ylab='',main='True cluster means')
-    
+
     matplot(x,t(data),type='l',lty=1,col=true.partition+1, main='Set of synthetic data')
     lines(x,media1,lwd=2)
     lines(x,media2,lwd=2)
-    
+
   }
-  
+
   return(list(data=data, true.partition=true.partition))
 }

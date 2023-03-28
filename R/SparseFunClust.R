@@ -73,15 +73,9 @@ SparseFunClust <- function(data, x, K, do.alignment, funct.measure = 'L2', clust
     if(sum(dim(x)!=(dim(data)[1:2])))stop('Error: dimension mismatch between data and corresponding domain')
     x.reg <- x
   }
-<<<<<<< HEAD:SparseFunClust.R
-  
-  if(!is.double(K) | length(K)!=1){stop('Error: number of clusters K must be a single integer number')}
-  
-=======
 
   if(!is.double(K) | length(K)!=1){stop('Error: number of clusters K must be a single integer number')}
 
->>>>>>> 54087ffb848fe7a07012e184f9a363eb92afec85:R/SparseFunClust.R
   if(do.alignment){ # joint sparse clustering WITH alignment
 
     # other initial checks
@@ -119,13 +113,8 @@ SparseFunClust <- function(data, x, K, do.alignment, funct.measure = 'L2', clust
 
     if(funct.measure == 'H1'){
       stop('Error: functional H1 measure not supported when alignment is not performed')
-<<<<<<< HEAD:SparseFunClust.R
-    }  
-    
-=======
     }
 
->>>>>>> 54087ffb848fe7a07012e184f9a363eb92afec85:R/SparseFunClust.R
     if(clust.method == 'pam'){require(cluster)}
 
     if(tuning.m){
@@ -141,11 +130,7 @@ SparseFunClust <- function(data, x, K, do.alignment, funct.measure = 'L2', clust
     final.templates <- GetTemplates(data, clusters = out.no.align$CLUSTER, w = out.no.align$W)
     final.b <- GetWCSS(data, out.no.align$CLUSTER)$bcss.perfeature
     final.index <- apply((data - final.templates[out.no.align$CLUSTER,]), 1, function(y){L2norm(x=x,y)})
-<<<<<<< HEAD:SparseFunClust.R
-    out <- list(template=final.templates, temp.abscissa=x, labels=out.no.align$CLUSTER, 
-=======
     out <- list(template=final.templates, temp.abscissa=x, labels=out.no.align$CLUSTER,
->>>>>>> 54087ffb848fe7a07012e184f9a363eb92afec85:R/SparseFunClust.R
                 warping=NULL, reg.abscissa=NULL, distance=final.index, w=out.no.align$W, x.bcss=final.b)
   }
 
@@ -160,10 +145,5 @@ SparseFunClust <- function(data, x, K, do.alignment, funct.measure = 'L2', clust
   ## distance = vector (length=n) of each curve's final distance to the assigned cluster template
   ## w = vector (length=n.out) of the estimated weighting function w(x)
   ## x.bcss = vector (length=n.out) of the final point-wise between-cluster sum-of-squares
-<<<<<<< HEAD:SparseFunClust.R
-   
-}
-=======
 
 }
->>>>>>> 54087ffb848fe7a07012e184f9a363eb92afec85:R/SparseFunClust.R
