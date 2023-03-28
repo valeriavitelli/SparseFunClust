@@ -90,8 +90,6 @@ generate.data.FV17 <- function(n, x, paramC=0.5, plots=FALSE){
 
   # plots
   if(plots){
-
-    x11()
     par(mfrow = c(1,2))
     matplot(x,cbind(media1,media2),
             type='l',lty=1,col=2:3,ylab='',main='True cluster means')
@@ -99,7 +97,6 @@ generate.data.FV17 <- function(n, x, paramC=0.5, plots=FALSE){
     matplot(x,t(data),type='l',lty=1,col=true.partition+1, main='Set of synthetic data')
     lines(x,media1,lwd=2)
     lines(x,media2,lwd=2)
-
   }
 
   return(list(data=data, true.partition=true.partition))
