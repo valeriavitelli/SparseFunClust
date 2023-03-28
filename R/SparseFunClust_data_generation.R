@@ -23,7 +23,9 @@
 #' result <- SparseFunClust(out$data, x, K = 2, do.alignment = FALSE)
 #' cer(out$true.partition, result$labels)
 cer <- function(P,Q){
-  if(length(P)!=length(Q)){stop('le due partizioni devono avere la stessa lunghezza')}
+  if(length(P)!=length(Q)){
+    stop('Both partitions must have the same length')
+  }
   cer.comp <- 0
   for(i in 1:(length(P)-1)){for(j in (i+1):length(P)){cer.comp <- cer.comp + abs((P[i]==P[j])-(Q[i]==Q[j]))}}
   cer.comp <- cer.comp/choose(length(P),2)
