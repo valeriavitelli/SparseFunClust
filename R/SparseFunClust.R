@@ -115,8 +115,6 @@ SparseFunClust <- function(data, x, K, do.alignment, funct.measure = 'L2', clust
       stop('Error: functional H1 measure not supported when alignment is not performed')
     }
 
-    if(clust.method == 'pam'){require(cluster)}
-
     if(tuning.m){
       out <- FKMSparseClustering.permute(data, x, K, mbound = tuning.par$mbound, nperm = tuning.par$nperm,
                                          method = clust.method, maxiter = iter.max)
