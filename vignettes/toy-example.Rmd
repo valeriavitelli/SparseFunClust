@@ -38,8 +38,8 @@ result <- SparseFunClust(data, x, K = K, do.alignment = FALSE,
 # Plot / explore results
 
 ```{r, eval = FALSE}
-table(trueClust,result$CLUSTER)
-SparseFunClust:::cer(trueClust,result$CLUSTER)
+table(trueClust,result$labels)
+SparseFunClust:::cer(trueClust,result$labels)
 ```
 
 ```{r, eval = FALSE}
